@@ -7,15 +7,13 @@ const TestConfig: React.FC = () => {
   const [testResult, setTestResult] = useState('');
   const [isTesting, setIsTesting] = useState(false);
   const [config, setConfig] = useState<any>(null);
+  const [testSuccess, setTestSuccess] = useState(false);
 
   useEffect(() => {
     const savedConfig = localStorage.getItem('aiConfig');
     if (savedConfig) {
       const parsedConfig = JSON.parse(savedConfig);
       setConfig(parsedConfig);
-      if (parsedConfig.prompt) {
-        setTestInput(parsedConfig.prompt);
-      }
     }
   }, []);
 
@@ -32,18 +30,35 @@ const TestConfig: React.FC = () => {
 
     setIsTesting(true);
     setTestResult('');
+    setTestSuccess(false);
 
     try {
       const result = await llmService.callLLM(config, testInput);
       
       if (result.error) {
         setTestResult(`测试失败: ${result.error}`);
+        setTestSuccess(false);
       } else {
+        // 测试成功，保存配置信息
         const testResultText = `服务商：${config.provider}\n模型：${config.model}\n输入：${testInput}\n\n响应：${result.content}`;
         setTestResult(testResultText);
+        setTestSuccess(true);
+        
+        // 保存最后一次成功的测试配置
+        const successConfig = {
+          ...config,
+          lastTestInput: testInput,
+          lastTestResult: result.content,
+          lastTestTime: new Date().toISOString()
+        };
+        localStorage.setItem('aiConfig', JSON.stringify(successConfig));
+        
+        // 更新当前配置状态
+        setConfig(successConfig);
       }
     } catch (error) {
       setTestResult(`测试失败: ${error instanceof Error ? error.message : '未知错误'}`);
+      setTestSuccess(false);
     } finally {
       setIsTesting(false);
     }
@@ -161,17 +176,34 @@ const TestConfig: React.FC = () => {
 
             {/* 测试结果 */}
             {testResult && (
-              <div className="result-card">
+              <div className={`result-card ${testSuccess ? 'result-success' : 'result-error'}`}>
                 <div className="result-header">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                  <h3 className="result-title">测试结果</h3>
+                  {testSuccess ? (
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
+                  ) : (
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                      <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  )}
+                  <h3 className="result-title">
+                    {testSuccess ? '测试成功' : '测试失败'}
+                  </h3>
                 </div>
                 <div className="result-content">
                   <pre>{testResult}</pre>
                 </div>
+                {testSuccess && (
+                  <div className="result-footer">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M13 3L6 10L3 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span>配置信息已自动保存</span>
+                  </div>
+                )}
               </div>
             )}
           </section>
@@ -462,12 +494,24 @@ const TestConfig: React.FC = () => {
           border-left: 4px solid var(--accent-green);
         }
 
+        .result-success {
+          border-left-color: var(--accent-green);
+        }
+
+        .result-error {
+          border-left-color: var(--accent-pink);
+        }
+
         .result-header {
           display: flex;
           align-items: center;
           gap: var(--spacing-md);
           margin-bottom: var(--spacing-lg);
           color: var(--accent-green);
+        }
+
+        .result-error .result-header {
+          color: var(--accent-pink);
         }
 
         .result-title {
@@ -489,6 +533,21 @@ const TestConfig: React.FC = () => {
           color: var(--text-primary);
           white-space: pre-wrap;
           word-wrap: break-word;
+        }
+
+        .result-footer {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-xs);
+          margin-top: var(--spacing-md);
+          padding-top: var(--spacing-md);
+          border-top: 1px solid var(--border-light);
+          font-size: 13px;
+          color: var(--text-secondary);
+        }
+
+        .result-footer svg {
+          color: var(--accent-green);
         }
 
         /* 页脚 */

@@ -1,12 +1,5 @@
 // LLM API服务模块
 
-interface Config {
-  apiKey: string;
-  provider: string;
-  model: string;
-  prompt: string;
-}
-
 interface LLMResponse {
   content: string;
   error?: string;
@@ -28,17 +21,17 @@ export class LLMService {
     try {
       console.log('开始调用LLM服务:', { config, testInput });
       
-      const { apiKey, provider, model } = config;
-      const prompt = testInput || config.prompt;
+      const { apiKey, provider, model, prompt } = config;
+      const userInput = testInput || '请进行创新能力基础评估';
 
-      if (!apiKey || !provider || !model || !prompt) {
+      if (!apiKey || !provider || !model) {
         return {
           content: '',
-          error: '配置不完整，请检查API Key、服务商、模型和提示词'
+          error: '配置不完整，请检查API Key、服务商和模型'
         };
       }
 
-      const response = await this.fetchLLMResponse(provider, model, apiKey, prompt);
+      const response = await this.fetchLLMResponse(provider, model, apiKey, prompt, userInput);
       console.log('LLM服务调用成功:', response);
       return { content: response };
     } catch (error) {
@@ -54,7 +47,8 @@ export class LLMService {
     provider: string,
     model: string,
     apiKey: string,
-    prompt: string
+    systemPrompt: string,
+    userPrompt: string
   ): Promise<string> {
     console.log('开始获取LLM响应:', { provider, model });
     
@@ -62,19 +56,19 @@ export class LLMService {
 
     switch (provider) {
       case 'deepseek':
-        response = await this.fetchDeepSeek(model, apiKey, prompt);
+        response = await this.fetchDeepSeek(model, apiKey, systemPrompt, userPrompt);
         break;
       case 'glm':
-        response = await this.fetchGLM(model, apiKey, prompt);
+        response = await this.fetchGLM(model, apiKey, systemPrompt, userPrompt);
         break;
       case 'kimi':
-        response = await this.fetchKimi(model, apiKey, prompt);
+        response = await this.fetchKimi(model, apiKey, systemPrompt, userPrompt);
         break;
       case 'qwen':
-        response = await this.fetchQwen(model, apiKey, prompt);
+        response = await this.fetchQwen(model, apiKey, systemPrompt, userPrompt);
         break;
       case 'minimax':
-        response = await this.fetchMiniMax(model, apiKey, prompt);
+        response = await this.fetchMiniMax(model, apiKey, systemPrompt, userPrompt);
         break;
       default:
         throw new Error('不支持的服务商');
@@ -87,8 +81,16 @@ export class LLMService {
   private async fetchDeepSeek(
     model: string,
     apiKey: string,
-    prompt: string
+    systemPrompt: string,
+    userPrompt: string
   ): Promise<string> {
+    const messages: any[] = [];
+    
+    if (systemPrompt && systemPrompt.trim()) {
+      messages.push({ role: 'system', content: systemPrompt });
+    }
+    messages.push({ role: 'user', content: userPrompt });
+
     const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -97,9 +99,7 @@ export class LLMService {
       },
       body: JSON.stringify({
         model: model,
-        messages: [
-          { role: 'user', content: prompt }
-        ],
+        messages: messages,
         temperature: 0.7
       })
     });
@@ -118,8 +118,16 @@ export class LLMService {
   private async fetchGLM(
     model: string,
     apiKey: string,
-    prompt: string
+    systemPrompt: string,
+    userPrompt: string
   ): Promise<string> {
+    const messages: any[] = [];
+    
+    if (systemPrompt && systemPrompt.trim()) {
+      messages.push({ role: 'system', content: systemPrompt });
+    }
+    messages.push({ role: 'user', content: userPrompt });
+
     // 修复GLM API端点地址
     const response = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
       method: 'POST',
@@ -129,9 +137,7 @@ export class LLMService {
       },
       body: JSON.stringify({
         model: model,
-        messages: [
-          { role: 'user', content: prompt }
-        ],
+        messages: messages,
         temperature: 0.7
       })
     });
@@ -161,8 +167,16 @@ export class LLMService {
   private async fetchKimi(
     model: string,
     apiKey: string,
-    prompt: string
+    systemPrompt: string,
+    userPrompt: string
   ): Promise<string> {
+    const messages: any[] = [];
+    
+    if (systemPrompt && systemPrompt.trim()) {
+      messages.push({ role: 'system', content: systemPrompt });
+    }
+    messages.push({ role: 'user', content: userPrompt });
+
     const response = await fetch('https://api.moonshot.cn/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -171,9 +185,7 @@ export class LLMService {
       },
       body: JSON.stringify({
         model: model,
-        messages: [
-          { role: 'user', content: prompt }
-        ],
+        messages: messages,
         temperature: 0.7
       })
     });
@@ -192,8 +204,16 @@ export class LLMService {
   private async fetchQwen(
     model: string,
     apiKey: string,
-    prompt: string
+    systemPrompt: string,
+    userPrompt: string
   ): Promise<string> {
+    const messages: any[] = [];
+    
+    if (systemPrompt && systemPrompt.trim()) {
+      messages.push({ role: 'system', content: systemPrompt });
+    }
+    messages.push({ role: 'user', content: userPrompt });
+
     const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', {
       method: 'POST',
       headers: {
@@ -203,7 +223,7 @@ export class LLMService {
       body: JSON.stringify({
         model: model,
         input: {
-          prompt: prompt
+          messages: messages
         },
         parameters: {
           temperature: 0.7
@@ -218,6 +238,8 @@ export class LLMService {
     const data = await response.json();
     if (data.output && data.output.text) {
       return data.output.text;
+    } else if (data.output && data.output.choices && data.output.choices.length > 0) {
+      return data.output.choices[0].message.content;
     }
     throw new Error('Qwen API响应格式未知');
   }
@@ -225,8 +247,16 @@ export class LLMService {
   private async fetchMiniMax(
     model: string,
     apiKey: string,
-    prompt: string
+    systemPrompt: string,
+    userPrompt: string
   ): Promise<string> {
+    const messages: any[] = [];
+    
+    if (systemPrompt && systemPrompt.trim()) {
+      messages.push({ role: 'system', content: systemPrompt });
+    }
+    messages.push({ role: 'user', content: userPrompt });
+
     const response = await fetch('https://api.minimax.chat/v1/text/chatcompletion', {
       method: 'POST',
       headers: {
@@ -235,9 +265,7 @@ export class LLMService {
       },
       body: JSON.stringify({
         model: model,
-        messages: [
-          { role: 'user', content: prompt }
-        ],
+        messages: messages,
         temperature: 0.7
       })
     });

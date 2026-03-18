@@ -4,6 +4,7 @@ import Assessment from './pages/Assessment'
 import Admin from './pages/Admin'
 import TestConfig from './pages/TestConfig'
 import Profile from './pages/Profile'
+import BasicAssessment from './pages/BasicAssessment'
 import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/test-config" element={<TestConfig />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/basic-assessment" element={<BasicAssessment />} />
       </Routes>
     </Router>
 

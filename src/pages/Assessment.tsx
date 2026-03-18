@@ -1,7 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Assessment: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleBasicAssessment = () => {
+    navigate('/basic-assessment');
+  };
+
   return (
     <div className="assessment-container">
       {/* 导航栏 */}
@@ -35,7 +41,7 @@ const Assessment: React.FC = () => {
           <h3 className="process-title">测评流程</h3>
           
           <div className="steps">
-            <div className="step">
+            <div className="step" onClick={handleBasicAssessment} style={{ cursor: 'pointer' }}>
               <div className="step-number">1</div>
               <div className="step-content">
                 <h4 className="step-title">基础评估</h4>

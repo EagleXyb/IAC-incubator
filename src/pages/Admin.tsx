@@ -1,27 +1,71 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Admin: React.FC = () => {
+  const navigate = useNavigate();
   const [apiKey, setApiKey] = useState('');
   const [provider, setProvider] = useState('');
   const [model, setModel] = useState('');
   const [prompt, setPrompt] = useState('');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
+
+  // 页面加载时读取已保存的配置
+  useEffect(() => {
+    const savedConfig = localStorage.getItem('aiConfig');
+    if (savedConfig) {
+      const config = JSON.parse(savedConfig);
+      setApiKey(config.apiKey || '');
+      setProvider(config.provider || '');
+      setModel(config.model || '');
+      setPrompt(config.prompt || '');
+    }
+  }, []);
   
   const handleSave = () => {
-    const config = { apiKey, provider, model, prompt };
-    console.log('保存配置', config);
+    // 验证必填项
+    if (!apiKey.trim()) {
+      alert('请填写 API Key');
+      return;
+    }
+    if (!provider) {
+      alert('请选择服务商');
+      return;
+    }
+    if (!model) {
+      alert('请选择模型');
+      return;
+    }
+    if (!prompt.trim()) {
+      alert('请填写系统提示词');
+      return;
+    }
+
+    setSaveStatus('saving');
+    
+    const config = { 
+      apiKey: apiKey.trim(), 
+      provider, 
+      model, 
+      prompt: prompt.trim() 
+    };
+    
+    // 保存配置到 localStorage
     localStorage.setItem('aiConfig', JSON.stringify(config));
-    alert('配置已保存');
+    
+    setTimeout(() => {
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    }, 500);
   };
   
   const handleModify = () => {
     const savedConfig = localStorage.getItem('aiConfig');
     if (savedConfig) {
       const config = JSON.parse(savedConfig);
-      setApiKey(config.apiKey);
-      setProvider(config.provider);
-      setModel(config.model);
-      setPrompt(config.prompt);
+      setApiKey(config.apiKey || '');
+      setProvider(config.provider || '');
+      setModel(config.model || '');
+      setPrompt(config.prompt || '');
       alert('配置已加载，请修改后重新保存');
     } else {
       alert('暂无保存的配置');
@@ -29,13 +73,35 @@ const Admin: React.FC = () => {
   };
   
   const handleTest = () => {
-    if (!apiKey || !provider || !model) {
-      alert('请先填写API Key、选择服务商和模型');
+    // 验证必填项
+    if (!apiKey.trim()) {
+      alert('请填写 API Key');
       return;
     }
-    const config = { apiKey, provider, model, prompt };
+    if (!provider) {
+      alert('请选择服务商');
+      return;
+    }
+    if (!model) {
+      alert('请选择模型');
+      return;
+    }
+    if (!prompt.trim()) {
+      alert('请填写系统提示词');
+      return;
+    }
+
+    // 保存当前表单信息
+    const config = { 
+      apiKey: apiKey.trim(), 
+      provider, 
+      model, 
+      prompt: prompt.trim() 
+    };
     localStorage.setItem('aiConfig', JSON.stringify(config));
-    window.location.href = '/test-config';
+    
+    // 跳转到测试页面
+    navigate('/test-config');
   };
   
   return (
@@ -163,6 +229,7 @@ const Admin: React.FC = () => {
               <div className="form-group">
                 <label htmlFor="prompt" className="form-label">
                   系统提示词
+                  <span className="label-required">*</span>
                 </label>
                 <textarea
                   id="prompt"
@@ -178,11 +245,33 @@ const Admin: React.FC = () => {
 
             {/* 操作按钮 */}
             <div className="form-actions">
-              <button className="btn-primary" onClick={handleSave}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M16 5L8 13L4 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                保存配置
+              <button 
+                className="btn-primary" 
+                onClick={handleSave}
+                disabled={saveStatus === 'saving'}
+              >
+                {saveStatus === 'saving' ? (
+                  <>
+                    <svg className="spinner" width="20" height="20" viewBox="0 0 20 20">
+                      <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="none" strokeDasharray="50" strokeLinecap="round"/>
+                    </svg>
+                    保存中...
+                  </>
+                ) : saveStatus === 'saved' ? (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16 5L8 13L4 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    已保存
+                  </>
+                ) : (
+                  <>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M16 5L8 13L4 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    保存配置
+                  </>
+                )}
               </button>
               
               <button className="btn-secondary" onClick={handleModify}>
@@ -405,9 +494,23 @@ const Admin: React.FC = () => {
           color: white;
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
           background: var(--accent-blue-hover);
           transform: scale(1.02);
+        }
+
+        .btn-primary:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        .spinner {
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
         .btn-secondary {
