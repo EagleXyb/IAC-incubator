@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Assessment from './pages/Assessment'
 import Admin from './pages/Admin'
 import TestConfig from './pages/TestConfig'
+import Profile from './pages/Profile'
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/assessment" element={<Assessment />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/test-config" element={<TestConfig />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
 

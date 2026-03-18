@@ -1,7 +1,33 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 点击外部关闭下拉菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // 模拟登录/登出
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setShowDropdown(false);
+  };
+
   return (
     <div className="home-container">
       {/* 导航栏 */}
@@ -11,7 +37,76 @@ const Home: React.FC = () => {
             <span className="logo-icon">💡</span>
             <span className="logo-text">IAC Incubator</span>
           </div>
-          <Link to="/admin" className="nav-link">后台管理</Link>
+          
+          <div className="nav-right">
+            {isLoggedIn ? (
+              <div className="user-menu" ref={dropdownRef}>
+                <button 
+                  className="avatar-button"
+                  onClick={() => setShowDropdown(!showDropdown)}
+                >
+                  <div className="avatar-small">
+                    张
+                  </div>
+                </button>
+                
+                {showDropdown && (
+                  <div className="dropdown-menu">
+                    <div className="dropdown-header">
+                      <div className="avatar-medium">张</div>
+                      <div className="user-info">
+                        <div className="user-name">张三</div>
+                        <div className="user-email">zhangsan@example.com</div>
+                      </div>
+                    </div>
+                    
+                    <div className="dropdown-divider"></div>
+                    
+                    <Link 
+                      to="/profile" 
+                      className="dropdown-item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="6" r="3" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                      <span>个人中心</span>
+                    </Link>
+                    
+                    <Link 
+                      to="/admin" 
+                      className="dropdown-item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M2 6h12M6 2v12" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                      <span>后台管理</span>
+                    </Link>
+                    
+                    <div className="dropdown-divider"></div>
+                    
+                    <button 
+                      className="dropdown-item dropdown-item-logout"
+                      onClick={handleLogout}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M6 2H3v12h3" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M12 8H6M9 5l3 3-3 3" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                      <span>退出登录</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button className="login-button" onClick={handleLogin}>
+                登录 / 注册
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -175,18 +270,162 @@ const Home: React.FC = () => {
           color: var(--text-primary);
         }
 
-        .nav-link {
-          font-size: 14px;
-          color: var(--accent-blue);
-          text-decoration: none;
-          padding: var(--spacing-sm) var(--spacing-md);
-          border-radius: var(--radius-sm);
-          transition: background var(--transition-fast);
+        .nav-right {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-md);
         }
 
-        .nav-link:hover {
-          background: rgba(0, 113, 227, 0.1);
+        .login-button {
+          padding: 8px 20px;
+          background: rgba(0, 113, 227, 0.08);
+          color: var(--accent-blue);
+          border: none;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all var(--transition-fast);
+        }
+
+        .login-button:hover {
+          background: rgba(0, 113, 227, 0.15);
+        }
+
+        .user-menu {
+          position: relative;
+        }
+
+        .avatar-button {
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 50%;
+          transition: all var(--transition-fast);
+        }
+
+        .avatar-button:hover {
+          box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+
+        .avatar-small {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: 600;
+          color: white;
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          min-width: 240px;
+          background: var(--bg-primary);
+          border-radius: var(--radius-md);
+          box-shadow: var(--shadow-lg);
+          border: 1px solid var(--border-light);
+          overflow: hidden;
+          animation: dropdownFadeIn 0.2s ease;
+          z-index: 1000;
+        }
+
+        @keyframes dropdownFadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .dropdown-header {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-md);
+          padding: var(--spacing-md);
+          background: var(--bg-secondary);
+        }
+
+        .avatar-medium {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          font-weight: 600;
+          color: white;
+          flex-shrink: 0;
+        }
+
+        .user-info {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .user-name {
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: 2px;
+        }
+
+        .user-email {
+          font-size: 13px;
+          color: var(--text-secondary);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .dropdown-divider {
+          height: 1px;
+          background: var(--border-light);
+          margin: var(--spacing-xs) 0;
+        }
+
+        .dropdown-item {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-sm);
+          padding: 10px var(--spacing-md);
+          color: var(--text-primary);
           text-decoration: none;
+          font-size: 14px;
+          transition: background var(--transition-fast);
+          cursor: pointer;
+          width: 100%;
+          border: none;
+          background: none;
+          text-align: left;
+        }
+
+        .dropdown-item:hover {
+          background: rgba(0, 113, 227, 0.05);
+          text-decoration: none;
+        }
+
+        .dropdown-item svg {
+          color: var(--text-secondary);
+        }
+
+        .dropdown-item-logout {
+          color: var(--accent-pink);
+        }
+
+        .dropdown-item-logout svg {
+          color: var(--accent-pink);
         }
 
         /* Hero 区域 */
@@ -459,6 +698,36 @@ const Home: React.FC = () => {
             padding: 0 var(--spacing-md);
           }
 
+          .login-button {
+            padding: 6px 16px;
+            font-size: 13px;
+          }
+
+          .avatar-small {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+          }
+
+          .dropdown-menu {
+            min-width: 200px;
+            right: -8px;
+          }
+
+          .avatar-medium {
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+          }
+
+          .user-name {
+            font-size: 14px;
+          }
+
+          .user-email {
+            font-size: 12px;
+          }
+
           .hero {
             padding: 60px var(--spacing-md) 40px;
           }
@@ -501,6 +770,19 @@ const Home: React.FC = () => {
         @media (prefers-color-scheme: dark) {
           .nav {
             background: rgba(29, 29, 31, 0.8);
+          }
+
+          .dropdown-menu {
+            background: var(--bg-secondary);
+            border-color: var(--border);
+          }
+
+          .dropdown-header {
+            background: var(--bg-primary);
+          }
+
+          .dropdown-item:hover {
+            background: rgba(0, 113, 227, 0.1);
           }
 
           .feature-card {
