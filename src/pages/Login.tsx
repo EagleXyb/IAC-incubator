@@ -296,7 +296,7 @@ const Login: React.FC = () => {
           display: flex;
           flex-direction: column;
           gap: var(--spacing-md);
-          width: 360px;
+          width: 300px;
           letter-spacing: normal;
           text-align: left;
         }
