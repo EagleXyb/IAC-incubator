@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
@@ -10,14 +10,38 @@ const Login: React.FC = () => {
     password: '',
     confirmPassword: '',
   });
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // 从localStorage加载保存的登录信息
+  useEffect(() => {
+    if (isLogin) {
+      console.log('加载保存的登录信息');
+      const savedEmail = localStorage.getItem('loginEmail');
+      const savedPassword = localStorage.getItem('loginPassword');
+      console.log('从localStorage读取:', { savedEmail, savedPassword });
+      if (savedEmail && savedPassword) {
+        setFormData(prev => ({
+          ...prev,
+          email: savedEmail,
+          password: savedPassword
+        }));
+        setRememberMe(true);
+        console.log('成功加载保存的登录信息');
+      }
+    }
+  }, [isLogin]); // 依赖isLogin，当从注册模式切换到登录模式时也执行
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // 清除对应字段的错误
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      setRememberMe(checked);
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+      // 清除对应字段的错误
+      if (errors[name]) {
+        setErrors(prev => ({ ...prev, [name]: '' }));
+      }
     }
   };
 
@@ -55,6 +79,23 @@ const Login: React.FC = () => {
     if (validateForm()) {
       // 模拟登录/注册成功
       console.log(isLogin ? '登录成功' : '注册成功', formData);
+      
+      // 处理记住我功能
+      if (isLogin) {
+        console.log('处理记住我功能:', { rememberMe, email: formData.email, password: formData.password });
+        if (rememberMe) {
+          // 保存登录信息到localStorage
+          localStorage.setItem('loginEmail', formData.email);
+          localStorage.setItem('loginPassword', formData.password);
+          console.log('登录信息已保存到localStorage');
+        } else {
+          // 清除保存的登录信息
+          localStorage.removeItem('loginEmail');
+          localStorage.removeItem('loginPassword');
+          console.log('已清除localStorage中的登录信息');
+        }
+      }
+      
       navigate('/');
     }
   };
@@ -62,6 +103,7 @@ const Login: React.FC = () => {
   const switchMode = () => {
     setIsLogin(!isLogin);
     setErrors({});
+    setRememberMe(false);
     setFormData({
       username: '',
       email: '',
@@ -159,7 +201,7 @@ const Login: React.FC = () => {
           {isLogin && (
             <div className="form-options">
               <label className="checkbox-label">
-                <input type="checkbox" />
+                <input type="checkbox" name="rememberMe" checked={rememberMe} onChange={handleChange} />
                 <span>记住我</span>
               </label>
               <Link to="/forgot-password" className="forgot-link">忘记密码？</Link>
