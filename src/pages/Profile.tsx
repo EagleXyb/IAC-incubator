@@ -408,7 +408,7 @@ const Profile: React.FC = () => {
         .stat-card {
           background: var(--bg-primary);
           padding: var(--spacing-xl);
-          border-radius: var(--radius-lg);
+          border-radius: 8px;
           text-align: center;
           box-shadow: var(--shadow-sm);
           border: 1px solid var(--border-light);
@@ -442,7 +442,7 @@ const Profile: React.FC = () => {
         .info-card {
           background: var(--bg-primary);
           padding: var(--spacing-2xl);
-          border-radius: var(--radius-lg);
+          border-radius: 8px;
           box-shadow: var(--shadow-sm);
           border: 1px solid var(--border-light);
         }
@@ -484,7 +484,7 @@ const Profile: React.FC = () => {
           color: var(--text-primary);
           background: var(--bg-secondary);
           border: 1px solid var(--border);
-          border-radius: var(--radius-sm);
+          border-radius: 8px;
           padding: 8px 12px;
           transition: all var(--transition-fast);
         }
@@ -506,7 +506,7 @@ const Profile: React.FC = () => {
           padding: 12px 16px;
           background: var(--bg-secondary);
           border: 1px solid var(--border);
-          border-radius: var(--radius-sm);
+          border-radius: 8px;
           font-size: 17px;
           line-height: 1.6;
           color: var(--text-primary);
@@ -534,7 +534,7 @@ const Profile: React.FC = () => {
           gap: var(--spacing-xs);
           padding: 8px 16px;
           background: var(--bg-secondary);
-          border-radius: var(--radius-full);
+          border-radius: 8px;
           font-size: 15px;
           color: var(--text-primary);
           transition: all var(--transition-fast);
@@ -562,7 +562,7 @@ const Profile: React.FC = () => {
           padding: 8px 16px;
           background: transparent;
           border: 1px dashed var(--border);
-          border-radius: var(--radius-full);
+          border-radius: 8px;
           font-size: 15px;
           color: var(--accent-blue);
           cursor: pointer;
@@ -589,7 +589,7 @@ const Profile: React.FC = () => {
           background: var(--accent-blue);
           color: white;
           border: none;
-          border-radius: var(--radius-full);
+          border-radius: 8px;
           font-size: 17px;
           font-weight: 500;
           cursor: pointer;

@@ -1025,7 +1025,7 @@ const Home: React.FC = () => {
         }
 
         .features-content {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
         }
 
@@ -1052,22 +1052,24 @@ const Home: React.FC = () => {
         }
 
         .feature-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-          gap: var(--spacing-xl);
+          display: flex;
+          justify-content: center;
+          gap: calc(var(--spacing-lg) - 5px);
           padding: 20px 0;
+          flex-wrap: nowrap;
         }
 
         .feature-card {
           background: var(--bg-secondary);
           padding: var(--spacing-2xl);
-          border-radius: var(--radius-lg);
+          border-radius: 10px;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           cursor: pointer;
           text-decoration: none;
           border: 1px solid transparent;
           position: relative;
           overflow: hidden;
+          width: 450px;
         }
 
         .feature-card::before {
@@ -1238,6 +1240,12 @@ const Home: React.FC = () => {
           }
         }
 
+        @media (max-width: 1400px) {
+          .feature-grid {
+            flex-wrap: wrap;
+          }
+        }
+
         @media (max-width: 768px) {
           .nav-content {
             padding: 0 var(--spacing-md);
@@ -1297,8 +1305,9 @@ const Home: React.FC = () => {
             font-size: 17px;
           }
 
-          .feature-grid {
-            grid-template-columns: 1fr;
+          .feature-card {
+            width: 100%;
+            max-width: 450px;
           }
 
           .benefits-content {

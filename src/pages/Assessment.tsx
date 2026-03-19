@@ -197,7 +197,7 @@ const Assessment: React.FC = () => {
           text-decoration: none;
           font-size: 14px;
           padding: var(--spacing-sm) var(--spacing-md);
-          border-radius: var(--radius-sm);
+          border-radius: 8px;
           transition: background var(--transition-fast);
         }
 
@@ -245,7 +245,7 @@ const Assessment: React.FC = () => {
           padding: 6px 16px;
           background: rgba(255, 107, 107, 0.1);
           color: #ff6b6b;
-          border-radius: var(--radius-full);
+          border-radius: 8px;
           font-size: 13px;
           font-weight: 600;
           letter-spacing: 0.5px;
@@ -301,25 +301,28 @@ const Assessment: React.FC = () => {
         }
 
         .process-content {
-          max-width: 1000px;
+          max-width: 1400px;
           margin: 0 auto;
         }
 
         .steps {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: var(--spacing-xl);
+          display: flex;
+          justify-content: center;
+          gap: calc(var(--spacing-lg) - 3px);
           margin-bottom: var(--spacing-3xl);
+          flex-wrap: nowrap;
         }
 
         .step-card {
           background: var(--bg-secondary);
           padding: var(--spacing-2xl);
-          border-radius: var(--radius-lg);
+          border-radius: 8px;
           transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
           position: relative;
           overflow: hidden;
           border: 1px solid transparent;
+          flex: 1;
+          min-width: 300px;
         }
 
         .step-card:hover {
@@ -355,7 +358,7 @@ const Assessment: React.FC = () => {
         .step-icon {
           width: 52px;
           height: 52px;
-          border-radius: var(--radius-md);
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -404,7 +407,7 @@ const Assessment: React.FC = () => {
           background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
           color: white;
           border: none;
-          border-radius: var(--radius-full);
+          border-radius: 8px;
           font-size: 17px;
           font-weight: 600;
           cursor: pointer;
@@ -443,7 +446,7 @@ const Assessment: React.FC = () => {
           align-items: center;
           gap: var(--spacing-md);
           padding: var(--spacing-xl);
-          border-radius: var(--radius-lg);
+          border-radius: 8px;
           transition: all 0.3s ease;
         }
 
@@ -516,6 +519,17 @@ const Assessment: React.FC = () => {
           }
         }
 
+        @media (max-width: 1400px) {
+          .steps {
+            flex-wrap: wrap;
+            gap: calc(var(--spacing-lg) - 3px);
+          }
+
+          .step-card {
+            flex: 1 1 calc(33.333% - (var(--spacing-lg) - 3px));
+          }
+        }
+
         @media (max-width: 768px) {
           .nav-content {
             padding: 0 var(--spacing-md);
@@ -534,7 +548,11 @@ const Assessment: React.FC = () => {
           }
 
           .steps {
-            grid-template-columns: 1fr;
+            flex-direction: column;
+          }
+
+          .step-card {
+            flex: 1 1 100%;
           }
 
           .process,
