@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-const Assessment: React.FC = () => {
-  const navigate = useNavigate();
+const Training: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
 
-  const handleBasicAssessment = () => {
-    navigate('/basic-assessment');
-  };
-
   return (
-    <div className="assessment-container">
+    <div className="training-container">
       <nav className="nav">
         <div className="nav-content">
           <Link to="/" className="nav-back">
@@ -23,7 +18,7 @@ const Assessment: React.FC = () => {
             </svg>
             <span>返回首页</span>
           </Link>
-          <h1 className="nav-title">创新能力测评</h1>
+          <h1 className="nav-title">创新能力训练</h1>
           <div style={{ width: '80px' }}></div>
         </div>
       </nav>
@@ -33,99 +28,128 @@ const Assessment: React.FC = () => {
         <div className="hero-content">
           <div className={`hero-badge ${isVisible ? 'animate-in' : ''}`}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
+              <circle cx="12" cy="12" r="10"/>
+              <polygon points="10 8 16 12 10 16 10 8"/>
             </svg>
-            <span>专业评估</span>
+            <span>系统训练</span>
           </div>
-          <h2 className={`hero-title ${isVisible ? 'animate-in' : ''}`}>发现您的创新潜能</h2>
+          <h2 className={`hero-title ${isVisible ? 'animate-in' : ''}`}>激活创新思维</h2>
           <p className={`hero-description ${isVisible ? 'animate-in' : ''}`}>
-            智谱新一代测评模型，全面评估您的创新能力维度，提供个性化发展建议
+            面向创新场景深度优化的训练模型，让创新思维更灵活，在多样化的创新任务中具备执行能力
           </p>
         </div>
       </section>
 
-      <section className="process">
-        <div className="process-content">
-          <div className="steps">
-            <div className="step-card" onClick={handleBasicAssessment} style={{ cursor: 'pointer' }}>
-              <div className="step-glow" style={{ background: 'radial-gradient(circle at 0% 0%, rgba(255, 107, 107, 0.4) 0%, transparent 60%)' }}></div>
-              <div className="step-header">
-                <div className="step-icon" style={{ background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                    <polyline points="2 17 12 22 22 17"/>
-                    <polyline points="2 12 12 17 22 12"/>
+      <section className="training-courses">
+        <div className="courses-content">
+          <div className="course-grid">
+            <div className="course-card">
+              <div className="course-glow" style={{ background: 'radial-gradient(circle at 0% 0%, rgba(79, 172, 254, 0.4) 0%, transparent 60%)' }}></div>
+              <div className="course-header">
+                <div className="course-icon" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                    <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                    <path d="M2 2l7.586 7.586"/>
+                    <circle cx="11" cy="11" r="2"/>
                   </svg>
                 </div>
-                <div className="step-number">01</div>
+                <div className="course-level">初级</div>
               </div>
-              <h4 className="step-title">基础评估</h4>
-              <p className="step-description">
-                评估您的创新思维基础能力，了解您的创新意识、好奇心和开放性思维
+              <h3 className="course-title">发散思维入门</h3>
+              <p className="course-description">
+                学习基础的发散思维技巧，培养多角度思考问题的能力
               </p>
-            </div>
-
-            <div className="step-card">
-              <div className="step-glow" style={{ background: 'radial-gradient(circle at 100% 0%, rgba(79, 172, 254, 0.4) 0%, transparent 60%)' }}></div>
-              <div className="step-header">
-                <div className="step-icon" style={{ background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <div className="course-meta">
+                <span className="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="10"/>
                     <polyline points="12 6 12 12 16 14"/>
                   </svg>
-                </div>
-                <div className="step-number">02</div>
+                  3小时
+                </span>
+                <span className="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  12节课
+                </span>
               </div>
-              <h4 className="step-title">能力测试</h4>
-              <p className="step-description">
-                通过一系列精心设计的测试题，评估您的发散性思维、问题解决和创造性表达能力
-              </p>
+              <button className="course-btn">开始学习</button>
             </div>
 
-            <div className="step-card">
-              <div className="step-glow" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(67, 233, 123, 0.4) 0%, transparent 60%)' }}></div>
-              <div className="step-header">
-                <div className="step-icon" style={{ background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    <path d="M9 12h6M12 9v6"/>
+            <div className="course-card">
+              <div className="course-glow" style={{ background: 'radial-gradient(circle at 50% 0%, rgba(155, 89, 182, 0.4) 0%, transparent 60%)' }}></div>
+              <div className="course-header">
+                <div className="course-icon" style={{ background: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
                   </svg>
                 </div>
-                <div className="step-number">03</div>
+                <div className="course-level" style={{ background: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)' }}>中级</div>
               </div>
-              <h4 className="step-title">结果分析</h4>
-              <p className="step-description">
-                生成详细的创新能力评估报告，提供针对性的提升建议和发展路径
+              <h3 className="course-title">创造性问题解决</h3>
+              <p className="course-description">
+                掌握系统化的创新问题解决方法论，突破思维定式
               </p>
+              <div className="course-meta">
+                <span className="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  5小时
+                </span>
+                <span className="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  18节课
+                </span>
+              </div>
+              <button className="course-btn" style={{ background: 'linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%)', boxShadow: '0 4px 14px 0 rgba(155, 89, 182, 0.4)' }}>开始学习</button>
             </div>
-          </div>
 
-          <div className="process-cta">
-            <button className="btn-primary" onClick={handleBasicAssessment}>
-              <span>开始测评</span>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M7 4L13 10L7 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
-            </button>
+            <div className="course-card">
+              <div className="course-glow" style={{ background: 'radial-gradient(circle at 100% 0%, rgba(243, 156, 18, 0.4) 0%, transparent 60%)' }}></div>
+              <div className="course-header">
+                <div className="course-icon" style={{ background: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)' }}>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                  </svg>
+                </div>
+                <div className="course-level" style={{ background: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)' }}>高级</div>
+              </div>
+              <h3 className="course-title">创新领导力</h3>
+              <p className="course-description">
+                培养团队创新领导力，打造持续创新的组织文化
+              </p>
+              <div className="course-meta">
+                <span className="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  8小时
+                </span>
+                <span className="meta-item">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  24节课
+                </span>
+              </div>
+              <button className="course-btn" style={{ background: 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)', boxShadow: '0 4px 14px 0 rgba(243, 156, 18, 0.4)' }}>开始学习</button>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="features">
         <div className="features-content">
-          <div className="feature-item">
-            <div className="feature-icon-circle">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-            </div>
-            <div className="feature-text">
-              <h4>快速便捷</h4>
-              <p>约 15 分钟完成全部测评</p>
-            </div>
-          </div>
           <div className="feature-item">
             <div className="feature-icon-circle">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -137,20 +161,32 @@ const Assessment: React.FC = () => {
               </svg>
             </div>
             <div className="feature-text">
-              <h4>科学准确</h4>
-              <p>基于专业心理学模型</p>
+              <h4>专业课程</h4>
+              <p>由创新专家精心设计</p>
             </div>
           </div>
           <div className="feature-item">
             <div className="feature-icon-circle">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
               </svg>
             </div>
             <div className="feature-text">
-              <h4>个性定制</h4>
-              <p>针对性的发展建议</p>
+              <h4>渐进学习</h4>
+              <p>从基础到高级循序渐进</p>
+            </div>
+          </div>
+          <div className="feature-item">
+            <div className="feature-icon-circle">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <div className="feature-text">
+              <h4>实践演练</h4>
+              <p>理论结合实际案例</p>
             </div>
           </div>
         </div>
@@ -163,7 +199,7 @@ const Assessment: React.FC = () => {
       </footer>
 
       <style>{`
-        .assessment-container {
+        .training-container {
           min-height: 100vh;
           background: var(--bg-primary);
           display: flex;
@@ -227,7 +263,7 @@ const Assessment: React.FC = () => {
           transform: translateX(-50%);
           width: 100%;
           height: 100%;
-          background: radial-gradient(circle at 50% 0%, rgba(255, 107, 107, 0.15) 0%, transparent 60%);
+          background: radial-gradient(circle at 50% 0%, rgba(79, 172, 254, 0.15) 0%, transparent 60%);
           pointer-events: none;
         }
 
@@ -243,8 +279,8 @@ const Assessment: React.FC = () => {
           align-items: center;
           gap: 8px;
           padding: 6px 16px;
-          background: rgba(255, 107, 107, 0.1);
-          color: #ff6b6b;
+          background: rgba(79, 172, 254, 0.1);
+          color: #4facfe;
           border-radius: var(--radius-full);
           font-size: 13px;
           font-weight: 600;
@@ -295,24 +331,23 @@ const Assessment: React.FC = () => {
           }
         }
 
-        .process {
+        .training-courses {
           padding: var(--spacing-4xl) var(--spacing-xl);
           background: var(--bg-primary);
         }
 
-        .process-content {
-          max-width: 1000px;
+        .courses-content {
+          max-width: 1200px;
           margin: 0 auto;
         }
 
-        .steps {
+        .course-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
           gap: var(--spacing-xl);
-          margin-bottom: var(--spacing-3xl);
         }
 
-        .step-card {
+        .course-card {
           background: var(--bg-secondary);
           padding: var(--spacing-2xl);
           border-radius: var(--radius-lg);
@@ -320,15 +355,17 @@ const Assessment: React.FC = () => {
           position: relative;
           overflow: hidden;
           border: 1px solid transparent;
+          display: flex;
+          flex-direction: column;
         }
 
-        .step-card:hover {
+        .course-card:hover {
           transform: translateY(-8px);
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
           border-color: var(--border-light);
         }
 
-        .step-glow {
+        .course-glow {
           position: absolute;
           top: 0;
           left: 0;
@@ -339,11 +376,11 @@ const Assessment: React.FC = () => {
           pointer-events: none;
         }
 
-        .step-card:hover .step-glow {
+        .course-card:hover .course-glow {
           opacity: 1;
         }
 
-        .step-header {
+        .course-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -352,9 +389,9 @@ const Assessment: React.FC = () => {
           z-index: 1;
         }
 
-        .step-icon {
-          width: 52px;
-          height: 52px;
+        .course-icon {
+          width: 56px;
+          height: 56px;
           border-radius: var(--radius-md);
           display: flex;
           align-items: center;
@@ -363,18 +400,20 @@ const Assessment: React.FC = () => {
           transition: transform 0.4s ease;
         }
 
-        .step-card:hover .step-icon {
+        .course-card:hover .course-icon {
           transform: scale(1.1) rotate(-5deg);
         }
 
-        .step-number {
-          font-size: 48px;
-          font-weight: 700;
-          color: var(--border);
-          line-height: 1;
+        .course-level {
+          padding: 4px 12px;
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+          color: white;
+          border-radius: var(--radius-full);
+          font-size: 12px;
+          font-weight: 600;
         }
 
-        .step-title {
+        .course-title {
           font-size: 22px;
           font-weight: 600;
           color: var(--text-primary);
@@ -383,46 +422,51 @@ const Assessment: React.FC = () => {
           z-index: 1;
         }
 
-        .step-description {
+        .course-description {
           font-size: 15px;
           line-height: 1.6;
           color: var(--text-secondary);
+          margin-bottom: var(--spacing-lg);
+          position: relative;
+          z-index: 1;
+          flex: 1;
+        }
+
+        .course-meta {
+          display: flex;
+          gap: var(--spacing-lg);
+          margin-bottom: var(--spacing-lg);
           position: relative;
           z-index: 1;
         }
 
-        .process-cta {
+        .meta-item {
           display: flex;
-          justify-content: center;
+          align-items: center;
+          gap: 6px;
+          font-size: 14px;
+          color: var(--text-secondary);
         }
 
-        .btn-primary {
-          display: inline-flex;
-          align-items: center;
-          gap: var(--spacing-sm);
-          padding: 14px 36px;
-          background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        .course-btn {
+          width: 100%;
+          padding: 12px;
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
           color: white;
           border: none;
-          border-radius: var(--radius-full);
-          font-size: 17px;
+          border-radius: var(--radius-md);
+          font-size: 15px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.3s ease;
-          box-shadow: 0 4px 14px 0 rgba(255, 107, 107, 0.4);
+          box-shadow: 0 4px 14px 0 rgba(79, 172, 254, 0.4);
+          position: relative;
+          z-index: 1;
         }
 
-        .btn-primary:hover {
+        .course-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px 0 rgba(255, 107, 107, 0.5);
-        }
-
-        .btn-primary svg {
-          transition: transform 0.3s ease;
-        }
-
-        .btn-primary:hover svg {
-          transform: translateX(4px);
+          box-shadow: 0 6px 20px 0 rgba(79, 172, 254, 0.5);
         }
 
         .features {
@@ -455,7 +499,7 @@ const Assessment: React.FC = () => {
           width: 56px;
           height: 56px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+          background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -507,7 +551,7 @@ const Assessment: React.FC = () => {
             font-size: 44px;
           }
 
-          .process {
+          .training-courses {
             padding: var(--spacing-3xl) var(--spacing-lg);
           }
 
@@ -533,11 +577,11 @@ const Assessment: React.FC = () => {
             font-size: 17px;
           }
 
-          .steps {
+          .course-grid {
             grid-template-columns: 1fr;
           }
 
-          .process,
+          .training-courses,
           .features {
             padding: var(--spacing-2xl) var(--spacing-md);
           }
@@ -557,12 +601,12 @@ const Assessment: React.FC = () => {
             background: rgba(29, 29, 31, 0.8);
           }
 
-          .step-card {
+          .course-card {
             background: var(--bg-secondary);
           }
 
           .hero-badge {
-            background: rgba(255, 107, 107, 0.15);
+            background: rgba(79, 172, 254, 0.15);
           }
         }
       `}</style>
@@ -570,4 +614,4 @@ const Assessment: React.FC = () => {
   );
 };
 
-export default Assessment;
+export default Training;
